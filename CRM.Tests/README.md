@@ -1,2 +1,2 @@
-# OgsysCRM.Tests
-NUnit tests for OGsysCRM CRUD functionalities
+# CRM.Tests
+NUnit tests for CRM CRUD functionalities

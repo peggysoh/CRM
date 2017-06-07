@@ -1,2 +1,2 @@
-# OgsysCRMData
-OgsysCRM Database
+# CRM.Database
+CRM Database
