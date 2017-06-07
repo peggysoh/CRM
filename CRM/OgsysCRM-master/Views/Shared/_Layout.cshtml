@@ -1,0 +1,76 @@
+﻿@using System.Web.Security;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./../Content/Images/favicon.png" />
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/dataTables")
+    @Styles.Render("~/Content/css")
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                <img src="../../Content/Images/CRM_Logo.png" alt="" />
+            </a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                var identity = (FormsIdentity)User.Identity;
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Customer", "Index", "Customer")</li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Notes", "Index", "Note")</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@User.Identity.Name<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink("My Account", "Index", "Account")</li>
+                                <li>@Html.ActionLink("Log Out", "Logout", "Account")</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>@Html.ActionLink("Register", "Register", "Account")</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>@Html.ActionLink("Log in", "Login", "Account")</li>
+                    </ul>
+                </div>
+            }
+            </div>
+    </div>    
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            This is a web assessment for OGsys.
+            <p>&copy; @DateTime.Now.Year - Peggy Soh</p>
+        </footer>
+    </div>
+    
+    @RenderSection("scripts", required: false)
+</body>
+</html>

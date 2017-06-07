@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-image: url(../../Content/Images/home_background.jpg);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position:center;
+    }
+</style>
+
+<body alt="">
+    <br /><br /><br /> 
+    <section class="featured" style="height:50vh;">
+        @if (User.Identity.IsAuthenticated)
+        {
+            var identity = (FormsIdentity)User.Identity;
+            <div class="content-wrapper" align="center" style="margin-top:25%;">
+                <h1>Welcome back, @User.Identity.Name</h1>
+                <h5>Customer Relationship Manager</h5>
+            </div>
+            <br />
+            <a href="@Url.Action("Index", "Note")">
+                <div align="center">
+                    <input class="btn btn-default" value="Let's Get Started" />
+                </div>
+            </a>
+        }
+        else
+        {
+            <div class="content-wrapper" align="center" style="margin-top:25%;">
+                <h1>Customer Relationship Manager</h1>
+                <h5>A simple web application to help you start keeping track of your customers.</h5>
+            </div>
+            <br />
+            <a href="@Url.Action("Login", "Account")">
+                <div align="center">
+                    <input class="btn btn-default" value="Get Started Today" />
+                </div>
+            </a>
+        }
+    </section>
+</body>
+

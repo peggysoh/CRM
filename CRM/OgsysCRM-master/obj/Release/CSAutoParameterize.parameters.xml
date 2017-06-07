@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="AppContext-Web.config Connection String" description="AppContext Connection String used in web.config by the application to access the database." defaultValue="Data Source=(LocalDb)\v11.0;Initial Catalog=OgsysCRM;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|\OgsysCRM.mdf" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Peggy\\documents\\visual\ studio\ 2015\\Projects\\OgsysCRM\\OgsysCRM\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='AppContext']/@connectionString" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="DefaultConnection_ConnectionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Peggy\\documents\\visual\ studio\ 2015\\Projects\\OgsysCRM\\OgsysCRM\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+  <parameter name="AppContext_DatabasePublish-Web.config Connection String" description="AppContext_DatabasePublish Connection String used in web.config by the application to access the database." defaultValue="AppContext_DatabasePublish.ConnetionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Peggy\\documents\\visual\ studio\ 2015\\Projects\\OgsysCRM\\OgsysCRM\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='AppContext_DatabasePublish']/@connectionString" />
+  </parameter>
+</parameters>

@@ -1,0 +1,157 @@
+﻿@model OgsysCRM.Models.NoteViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br /><br /><br />
+<div class="job-panel panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="top-title panel-title">
+            <div class="panel-name" style="display: inline-block; float: left; margin-top: 11px;">
+                Notes
+            </div>
+            <span class="header-add-info">
+                <button type="button" id="createBtn" class="btn btn-xs btn-add">
+                    <span class="spinner-part"></span>
+                    <span class="spinner-part"></span>
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+            </span>
+            <span class="header-add-info table-search"></span>
+        </h3>
+        <h3 class="bottom-title panel-title">
+            <span class="header-add-info" style="margin-right: -1px;" >
+                <select id="customerFilter" class="searchFilter">
+                    <option value="0">All - Customers</option>
+                    @foreach (var customer in Model.Customers)
+                    {
+                        <option value='@customer.Id'>@customer.FirstName @customer.LastName</option>
+                    }
+                </select>
+            </span>
+            <span class="header-add-info" style="margin-right: -1px;" >
+                <select id="userFilter" class="searchFilter">
+                    <option value="0">All - Users</option>
+                    @foreach (var user in Model.Users)
+                    {
+                        <option value='@user.Id'>@user.FirstName @user.LastName</option>
+                    }
+                </select>
+            </span>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div id="tableDiv" class="table-body " data-datatable="noteTable">
+            @Html.Partial("Partials/_NoteTable")
+        </div>
+    </div>
+</div>
+
+@Html.Partial("Partials/_NoteFormModal")
+
+<script type="text/javascript">
+    $(".searchFilter").selectric();
+
+    $(document).ready(function () {
+        DataTableHandler.handleDataTableDefaults();
+        var table = $("#noteTable").DataTable({
+            "ajax": {
+                type: 'POST',
+                data: {
+                    customerFilter: $("#customerFilter").val(),
+                    userFilter: $("#userFilter").val()
+                },
+                url: '@Url.Action("NoteTable", "Note")'
+            },
+            "language": {
+                "emptyTable": "No notes found"
+            },
+            "rowCallback": function (row, data) {
+                $(row).on("click", function () { });
+            },
+            "scrollY": "500px",
+            "columns": [
+                { "data": "Id", "visible": false },
+                { "data": "DateCreated" },
+                { "data": "Customer" },
+                { "data": "Body", "orderable": false },
+                { "data": "CreatedBy"},
+                {
+                    data: null,
+                    orderable: false,
+                    className: "center",
+                    defaultContent: "<span class='glyphicon glyphicon-pencil'></span>"
+                },
+                {
+                    data: null,
+                    orderable: false,
+                    className: "center",
+                    defaultContent: "<span class='glyphicon glyphicon-remove'></span>"
+                }
+            ]
+        }).on('preXhr.dt', function (e, settings, data) {
+            data.customerFilter = $("#customerFilter").val();
+            data.userFilter = $("#userFilter").val();
+        });
+        DataTableHandler.currentTable.setTable($("#noteTable"));
+
+        $("#customerFilter").on("change", function () {
+            $("#noteTable").DataTable().ajax.reload();
+        });
+
+        $("#userFilter").on("change", function () {
+            $("#noteTable").DataTable().ajax.reload();
+        });
+
+        $("#createBtn").on('click', function () {
+            var resourceUrl = '@Url.Action("Create", "Note")';
+            $.get(resourceUrl, function (data) {
+                var modalTemp = $('#noteModalTemplate');
+                modalTemp.find('.modal-title').text("Create Note");
+                modalTemp.find('.modal-footer').find(":button").show();
+                modalTemp.find('.modal-body').empty().html(data);
+                modalTemp.modal('show');
+            });
+        });
+
+        $("#noteTable").on('click', '.glyphicon-pencil', function (e) {
+            e.preventDefault();
+            var rowData = $('#noteTable').DataTable().row($(this).closest("tr")).data();
+            var resourceUrl = '@Url.Action("Edit", "Note")' + '?id=' + rowData.Id;
+            $.get(resourceUrl, function (data) {
+                var modalTemp = $('#noteModalTemplate');
+                modalTemp.find('.modal-title').text("Edit Note");
+                modalTemp.find('.modal-footer').find(":button").show();
+                modalTemp.find('.modal-body').empty().html(data);
+                modalTemp.modal('show');
+            });
+        });
+
+        $("#noteTable").on('click', '.glyphicon-remove', function (e) {
+            e.preventDefault();
+            var rowData = $('#noteTable').DataTable().row($(this).closest("tr")).data();
+            var resourceUrl = '@Url.Action("Delete", "Note")';
+            bootbox.confirm("Are you sure you would like to delete this note?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST",
+                        url: resourceUrl,
+                        data: { id: rowData.Id }
+                    }).success(function (data) {
+                        if (!data.error) {
+                            DataTableHandler.currentTable.table.DataTable().ajax.reload();
+                            toastr.success(data.msg, '');
+                        } else if (data.error || data === 'Error') {
+                            $('#errorDiv').empty().html(data).removeClass('hidden');
+                            toastr.error(data.msg, '');
+                        }
+                    });
+                }
+            });
+
+            $("#noteTable").DataTable().ajax.reload();
+        });
+    });
+</script>

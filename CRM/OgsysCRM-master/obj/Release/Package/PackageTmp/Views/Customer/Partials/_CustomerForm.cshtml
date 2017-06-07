@@ -1,0 +1,126 @@
+﻿@using System.Web.Mvc.Html
+@using OgsysCRM.Helpers;
+
+@model OgsysCRM.Models.CustomerViewModel
+
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("Customer", "Customer", FormMethod.Post, new { @id = "modalForm", @class = "form-horizontal form-bordered" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Customer.Id)
+    @Html.HiddenFor(x => x.Customer.AddressId)
+    @Html.HiddenFor(x => x.Customer.Address.Id)
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Customer.FirstName, "First Name", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.Customer.FirstName, new { data_parsley_required = "true", data_parsley_maxlength = "100", @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Customer.LastName, "Last Name", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.Customer.LastName, new { data_parsley_required = "true", data_parsley_maxlength = "100", @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Customer.CompanyName, "Company Name", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.Customer.CompanyName, new { data_parsley_required = "true", data_parsley_maxlength = "100", @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Customer.Email, "Email", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.Customer.Email, new { data_parsley_required = "true", data_parsley_type = "email", @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Customer.Phone, "Phone Number", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.Customer.Phone, new { data_parsley_required = "true", data_parsley_maxlength = "12", data_parsley_pattern_message = "Enter Valid Phone Number.", data_parsley_pattern = "^\\(\\d{3}\\) ?\\d{3}( |-)?\\d{4}|^\\d{3}( |-)?\\d{3}( |-)?\\d{4}", @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Customer.Address.Address1, "Address", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.Customer.Address.Address1, new { data_parsley_required = "true", data_parsley_maxlength = "100", @class = "form-control", placeholder = "Address" })
+            <br />
+        </div>
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Customer.Address.City, "City", new { @class = "control-label" })
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.Customer.Address.City, new { data_parsley_required = "true", data_parsley_maxlength = "100", @class = "form-control", placeholder = "City" })
+            <br />
+        </div>
+        <div class="col-lg-4 col-sm-5 text-right states">
+            @Html.LabelFor(model => model.Customer.Address.State, "State", new { @class = "control-label" })
+        </div>
+        <div class="col-lg-8 col-sm-7 states">
+            @Html.DropDownListFor(model => model.Customer.Address.State, new SelectList(Common.States, Model.Customer.Address.State), "- Select State -", new { @class = "form-control" })
+            <br />
+        </div>
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Customer.Address.Country, "Country", new { @class = "control-label" })
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.DropDownListFor(model => model.Customer.Address.Country, new SelectList(Common.Country, Model.Customer.Address.Country), new { data_parsley_required = "true", @class = "form-control" })
+            <br />
+        </div>
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Customer.Address.Zipcode, "Zipcode", new { @class = "control-label" })
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.Customer.Address.Zipcode, new { data_parsley_required = "true", data_parsley_maxlength = "100", @class = "form-control", placeholder = "Zipcode" })
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        CheckDropdowns();
+
+        $('#Customer_Address_Country').on('change', function () {
+            CheckDropdowns();
+        });        
+    });
+
+    function CheckDropdowns() {
+        if ($('#Customer_Address_Country option:selected').text() == 'United States') {
+            $.each($(".states"), function () {
+                $(this).attr('hidden', false);
+            });
+        } else {
+            $.each($(".states"), function () {
+                $(this).attr('hidden', true);
+            });
+        }
+    }
+</script>

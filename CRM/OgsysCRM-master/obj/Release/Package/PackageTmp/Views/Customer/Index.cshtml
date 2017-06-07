@@ -1,0 +1,120 @@
+﻿@model OgsysCRM.Models.Customer
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br /><br /><br />
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Customers
+            <span class="header-add-info">
+                <button type="button" id="createBtn" class="btn btn-xs btn-add">
+                    <span class="spinner-part"></span>
+                    <span class="spinner-part"></span>
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+            </span>
+            <span class="header-add-info table-search"></span>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div id="tableDiv" class="table-body " data-datatable="customerTable">
+            @Html.Partial("Partials/_CustomerTable")
+        </div>
+    </div>
+</div>
+
+@Html.Partial("Partials/_CustomerFormModal")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        DataTableHandler.handleDataTableDefaults();
+        var table = $("#customerTable").DataTable({
+            "ajax": {
+                type: 'POST',
+                url: '@Url.Action("CustomerTable", "Customer")'
+            },
+            "language": {
+                "emptyTable": "No customers found"
+            },
+            "rowCallback": function (row, data) {
+                $(row).on("click", function () { });
+            },
+            "scrollY": "500px",
+            "columns": [
+                { "data": "Id", "visible": false },
+                { "data": "Name" },
+                { "data": "CompanyName" },
+                { "data": "Email" },
+                { "data": "Phone", "orderable": false },
+                { "data": "Address", "orderable": false },
+                {
+                    data: null,
+                    orderable: false,
+                    className: "center",
+                    defaultContent: "<span class='glyphicon glyphicon-pencil'></span>"
+                },
+                {
+                    data: null,
+                    orderable: false,
+                    className: "center",
+                    defaultContent: "<span class='glyphicon glyphicon-remove'></span>"
+                }
+            ]
+        }).on('preXhr.dt', function (e, settings, data) {
+        });
+        DataTableHandler.currentTable.setTable($("#customerTable"));
+
+        $("#createBtn").on('click', function () {
+            var resourceUrl = '@Url.Action("Create", "Customer")';
+            $.get(resourceUrl, function (data) {
+                var modalTemp = $('#customerModalTemplate');
+                modalTemp.find('.modal-title').text("Create Customer");
+                modalTemp.find('.modal-footer').find(":button").show();
+                modalTemp.find('.modal-body').empty().html(data);
+                modalTemp.modal('show');
+            });
+        });
+
+        $("#customerTable").on('click', '.glyphicon-pencil', function (e) {
+            e.preventDefault();
+            var rowData = $('#customerTable').DataTable().row($(this).closest("tr")).data();
+            var resourceUrl = '@Url.Action("Edit", "Customer")' + '?id=' + rowData.Id;
+            $.get(resourceUrl, function (data) {
+                var modalTemp = $('#customerModalTemplate');
+                modalTemp.find('.modal-title').text("Edit Customer");
+                modalTemp.find('.modal-footer').find(":button").show();
+                modalTemp.find('.modal-body').empty().html(data);
+                modalTemp.modal('show');
+            });
+        });
+
+        $("#customerTable").on('click', '.glyphicon-remove', function (e) {
+            e.preventDefault();
+            var rowData = $('#customerTable').DataTable().row($(this).closest("tr")).data();
+            var resourceUrl = '@Url.Action("Delete", "Customer")';
+            bootbox.confirm("Are you sure you would like to delete this customer?", function (result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST",
+                        url: resourceUrl,
+                        data: { id: rowData.Id }
+                    }).success(function (data) {
+                        if (!data.error) {
+                            DataTableHandler.currentTable.table.DataTable().ajax.reload();
+                            toastr.success(data.msg, '');
+                        } else if (data.error || data === 'Error') {
+                            $('#errorDiv').empty().html(data).removeClass('hidden');
+                            toastr.error(data.msg, '');
+                        }
+                    });
+                }
+            });
+
+            $("#customerTable").DataTable().ajax.reload();
+        });
+    });
+</script>

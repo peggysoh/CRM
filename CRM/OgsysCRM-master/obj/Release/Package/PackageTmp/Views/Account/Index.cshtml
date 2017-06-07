@@ -1,0 +1,146 @@
+﻿@model OgsysCRM.Models.AccountViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br /><br /><br />
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            My Account
+            <span class="header-add-info">
+                <button type="button" id="editBtn" class="btn btn-xs btn-add">
+                    <span class="spinner-part"></span>
+                    <span class="spinner-part"></span>
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="color:white;"></span>
+                </button>
+            </span>
+        </h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Index", "Account", FormMethod.Post, new { @id = "accountForm", @class = "form-horizontal form-bordered" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.EditError)
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    @if (TempData["Success"] != null)
+                    {
+                        <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+                    }
+                    @Html.ValidationSummary("Reminder: You will use your email address to login.", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-4 col-sm-5 text-right">
+                    @Html.LabelFor(model => model.FirstName, "First Name", new { @class = "control-label" })
+                    <span class="required edit-only">*</span>
+                </div>
+                <div class="col-lg-8 col-sm-7">
+                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control toggle-edit" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-4 col-sm-5 text-right">
+                    @Html.LabelFor(model => model.LastName, "Last Name", new { @class = "control-label" })
+                    <span class="required edit-only">*</span>
+                </div>
+                <div class="col-lg-8 col-sm-7">
+                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control toggle-edit" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-4 col-sm-5 text-right">
+                    @Html.LabelFor(model => model.Email, "Email", new { @class = "control-label" })
+                    <span class="required edit-only">*</span>
+                </div>
+                <div class="col-lg-8 col-sm-7">
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control toggle-edit" })
+                </div>
+            </div>
+
+            <div class="form-group edit-only">
+                <div class="col-lg-4 col-sm-5 text-right">
+                    @Html.LabelFor(model => model.OldPassword, "Old Password", new { @class = "control-label" })
+                    <span class="required">*</span>
+                </div>
+                <div class="col-lg-8 col-sm-7">
+                    @Html.PasswordFor(model => model.OldPassword, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group edit-only">
+                <div class="col-lg-4 col-sm-5 text-right">
+                    @Html.LabelFor(model => model.Password, "Password", new { @class = "control-label" })
+                </div>
+                <div class="col-lg-8 col-sm-7">
+                    @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group edit-only">
+                <div class="col-lg-4 col-sm-5 text-right">
+                    @Html.LabelFor(model => model.ConfirmPassword, "Confirm Password", new { @class = "control-label" })
+                </div>
+                <div class="col-lg-8 col-sm-7">
+                    @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
+                </div>
+            </div>
+            
+            <div class="form-group edit-only">
+                <div class="col-md-10" style="float:right;">
+                    <input type="button" class="btn btn-Default" value="Cancel" id="cancelBtn" style="margin-left:10px; float:right;"/>
+                    <input type="submit" class="btn btn-success" value="Save" style="float:right;" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        if ($('#EditError').val() == '1') {
+            enableEdit();
+        } else {
+            disableEdit();
+        }
+        
+        $('#editBtn').on('click', function () {
+            enableEdit();
+        })
+
+        $('#cancelBtn').on('click', function () {
+            $("#accountForm")[0].reset();
+            disableEdit();           
+        });
+    });
+
+    function enableEdit() {
+        $.each($(".edit-only"), function () {
+            $(this).attr('hidden', false);
+        });
+
+        $.each($(".toggle-edit"), function () {
+            $(this).attr('readonly', false);
+        });
+    }
+    
+    function disableEdit() {
+        $.each($(".edit-only"), function () {
+            $(this).attr('hidden', true);
+        });
+
+        $.each($(".toggle-edit"), function () {
+            $(this).attr('readonly', true);
+        });
+    }
+</script>

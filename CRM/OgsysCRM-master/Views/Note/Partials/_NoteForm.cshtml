@@ -1,0 +1,57 @@
+﻿@using System.Web.Mvc.Html
+
+@model OgsysCRM.Models.NoteViewModel
+
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("Note", "Note", FormMethod.Post, new { @id = "modalForm", @class = "form-horizontal form-bordered" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Note.Id)
+    @Html.HiddenFor(x => x.Note.DateCreated)
+    @Html.HiddenFor(x => x.Note.UserId)
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Note.CustomerId, "Customer", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.DropDownListFor(model => model.Note.CustomerId, 
+            new SelectList((from c in Model.Customers select new { Value = c.Id, Text = c.FirstName + " " + c.LastName }), "Value", "Text", Model.Note.CustomerId), "- Select Customer -",
+            new { data_parsley_required = "true", @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.CreatedBy, "Created By", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.CreatedBy, new { data_parsley_required = "true", @class = "form-control", disabled = "disabled" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.DateCreated, "Created Date", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextBoxFor(model => model.DateCreated, new { data_parsley_required = "true", @class = "form-control", disabled = "disabled" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-4 col-sm-5 text-right">
+            @Html.LabelFor(model => model.Note.Body, "Note", new { @class = "control-label" })
+            <span class="required">*</span>
+        </div>
+        <div class="col-lg-8 col-sm-7">
+            @Html.TextAreaFor(model => model.Note.Body, new { data_parsley_required = "true", @class = "form-control", style = "resize:vertical;" })
+        </div>
+    </div>
+}

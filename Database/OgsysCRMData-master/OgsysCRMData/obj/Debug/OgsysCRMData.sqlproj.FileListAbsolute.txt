@@ -1,0 +1,9 @@
+c:\users\peggy\documents\visual studio 2015\Projects\OgsysCRMData\OgsysCRMData\bin\Debug\OgsysCRMData.dacpac
+c:\users\peggy\documents\visual studio 2015\Projects\OgsysCRMData\OgsysCRMData\bin\Debug\OgsysCRMData.dll
+c:\users\peggy\documents\visual studio 2015\Projects\OgsysCRMData\OgsysCRMData\bin\Debug\OgsysCRMData.pdb
+c:\users\peggy\documents\visual studio 2015\Projects\OgsysCRMData\OgsysCRMData\obj\Debug\Model.xml
+c:\users\peggy\documents\visual studio 2015\Projects\OgsysCRMData\OgsysCRMData\obj\Debug\refactor.xml
+c:\users\peggy\documents\visual studio 2015\Projects\OgsysCRMData\OgsysCRMData\obj\Debug\postdeploy.sql
+c:\users\peggy\documents\visual studio 2015\Projects\OgsysCRMData\OgsysCRMData\obj\Debug\predeploy.sql
+c:\users\peggy\documents\visual studio 2015\Projects\OgsysCRMData\OgsysCRMData\obj\Debug\OgsysCRMData.dll
+c:\users\peggy\documents\visual studio 2015\Projects\OgsysCRMData\OgsysCRMData\obj\Debug\OgsysCRMData.pdb
